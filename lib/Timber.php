@@ -136,20 +136,46 @@ class Timber {
 
 	/**
 	 * Get posts.
+	 *
 	 * @api
 	 * @example
 	 * ```php
 	 * $posts = Timber::get_posts();
- 	 *  $posts = Timber::get_posts('post_type = article')
- 	 *  $posts = Timber::get_posts(array('post_type' => 'article', 'category_name' => 'sports')); // uses wp_query format.
- 	 *  $posts = Timber::get_posts('post_type=any', array('portfolio' => 'MyPortfolioClass', 'alert' => 'MyAlertClass')); //use a classmap for the $PostClass
+	 *
+	 * // Use query string format
+	 * $posts = Timber::get_posts( 'post_type=article' );
+	 *
+	 * // Use WP_Query format
+	 * $posts = Timber::get_posts(
+	 *     array(
+	 *         'post_type' => 'article',
+	 *         'category_name' => 'sports'
+	 *     )
+	 * );
+	 *
+	 * // Use a map of classes for the $PostClass parameter that are applied to posts of different post types
+	 * $posts = Timber::get_posts(
+	 *     'post_type=any',
+	 *     array(
+	 *         'portfolio' => 'MyPortfolioClass',
+	 *         'alert' => 'MyAlertClass'
+	 *     )
+	 * );
 	 * ```
-	 * @param mixed   $query
-	 * @param string|array  $PostClass
-	 * @return array|bool|null
+	 *
+	 * @param mixed        $query             A query. This can be a query string, a WP_Query object, an array of
+	 *                                        arguments for WP_Query, an array of post IDs, a single post ID or a post
+	 *                                        slug. Use false to use the default query.
+	 * @param string|array $PostClass         The PHP class to wrap posts with. Can be a class name (string) or a
+	 *                                        key-value array map of post types and the classes that should be applied
+	 *                                        to them.
+	 * @param bool         $return_collection Returns an instance of Timber\PostCollection if true, an array of posts
+	 *                                        otherwise.
+	 *
+	 * @return array|\Timber\PostCollection|bool|null
 	 */
 	public static function get_posts( $query = false, $PostClass = 'Timber\Post', $return_collection = false ) {
-		return PostGetter::get_posts($query, $PostClass, $return_collection);
+		return PostGetter::get_posts( $query, $PostClass, $return_collection );
 	}
 
 	/**
