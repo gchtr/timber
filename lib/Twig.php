@@ -32,16 +32,15 @@ class Twig {
 	}
 
 	/**
-	 *
+	 * @param \Twig_Environment $twig
+	 * @return \Twig_Environment
 	 */
 	public function add_timber_functions( $twig ) {
-		/* actions and filters */
-		$twig->addFunction(new Twig_Function('action', function( $context ) {
-					$args = func_get_args();
-					array_shift($args);
-					$args[] = $context;
-					call_user_func_array('do_action', $args);
-				}, array('needs_context' => true)));
+		// Actions and filters
+		$twig->addFunction( new Twig_Function( 'action', function() {
+			$args = func_get_args();
+			call_user_func_array( 'do_action', $args );
+		} ) );
 
 		$twig->addFunction(new Twig_Function('function', array(&$this, 'exec_function')));
 		$twig->addFunction(new Twig_Function('fn', array(&$this, 'exec_function')));
@@ -216,7 +215,7 @@ class Twig {
 					return apply_filters_ref_array($tag, $args);
 				} ));
 
-		
+
 		$twig = apply_filters('timber/twig', $twig);
 		/**
 		 * get_twig is deprecated, use timber/twig
