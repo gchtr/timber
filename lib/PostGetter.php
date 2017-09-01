@@ -49,7 +49,7 @@ class PostGetter {
 	/**
 	 * @param mixed $query
 	 * @param string|array $PostClass
-	 * @return PostCollection | QueryIterator
+	 * @return \Timber\PostCollection|\Timber\QueryIterator
 	 */
 	public static function query_posts( $query = false, $PostClass = '\Timber\Post' ) {
 		if ( $type = self::get_class_for_use_as_timber_post($query) ) {
@@ -106,14 +106,14 @@ class PostGetter {
 	 * @return string
 	 */
 	public static function get_post_class( $post_type, $post_class = '\Timber\Post' ) {
-		$post_class = apply_filters('Timber\PostClassMap', $post_class);
+		$post_class = apply_filters('Timber\PostClassMap', $post_class );
 		$post_class_use = '\Timber\Post';
 
 		if ( is_array($post_class) ) {
 			if ( isset($post_class[$post_type]) ) {
 				$post_class_use = $post_class[$post_type];
 			} else {
-				Helper::error_log($post_type.' not found in '.print_r($post_class, true));
+				Helper::error_log($post_type.' not found in ' . print_r($post_class, true));
 			}
 		} elseif ( is_string($post_class) ) {
 			$post_class_use = $post_class;
