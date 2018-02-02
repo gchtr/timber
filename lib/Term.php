@@ -50,7 +50,12 @@ class Term extends Core implements CoreInterface {
 	public $object_type = 'term';
 	public static $representation = 'term';
 
+	/**
+	 * @internal
+	 * @var array
+	 */
 	public $_children;
+
 	/**
 	 * @api
 	 * @var string the human-friendly name of the term (ex: French Cuisine)
@@ -79,7 +84,16 @@ class Term extends Core implements CoreInterface {
 	/**
 	 * The string the term will render as by default
 	 *
-	 * @return string
+	 * You can use this instead of `{{ term.title }}`.
+	 *
+	 * @example
+	 * ```twig
+	 * {% for term in post.terms %}
+	 *     <a href="{{ term.link }}">{{ term }}</a>
+	 * {% endfor %}
+	 * ```
+	 *
+	 * @return string The name of the term.
 	 */
 	public function __toString() {
 		return $this->name;

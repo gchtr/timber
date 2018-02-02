@@ -4,12 +4,26 @@ namespace Timber;
 
 abstract class Core {
 
+	/**
+	 * @internal
+	 * @var
+	 */
 	public $id;
+
+	/**
+	 * @internal
+	 * @var
+	 */
 	public $ID;
+
+	/**
+	 * @internal
+	 * @var
+	 */
 	public $object_type;
 
 	/**
-	 *
+	 * @internal
 	 * @return boolean
 	 */
 	public function __isset( $field ) {
@@ -20,7 +34,11 @@ abstract class Core {
 	}
 
 	/**
-	 * This is helpful for twig to return properties and methods see: https://github.com/fabpot/Twig/issues/2
+	 * This is helpful for twig to return properties and methods
+	 *
+	 * @link https://github.com/twigphp/Twig/issues/2.
+	 *
+	 * @internal
 	 * @return mixed
 	 */
 	public function __call( $field, $args ) {
@@ -28,9 +46,34 @@ abstract class Core {
 	}
 
 	/**
-	 * This is helpful for twig to return properties and methods see: https://github.com/fabpot/Twig/issues/2
+	 * Get a custom field or property.
 	 *
-	 * @return mixed
+	 * This method is inherited from `Timber\Core` and will be called if you try to access a
+	 * property that is not defined or not accessible on the object. You don’t call this method directly. This is a
+	 * technique called [Property Overloading](http://de.php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.members).
+	 *
+	 * Here’s how it behaves:
+	 *
+	 * - When the property exists, it will return the property.
+	 * - If a custom field with this name exists, it will return the value of this field.
+	 * - If a method with this name exists on the object, it will call that method.
+	 *
+	 * @api
+	 * @example
+	 * ```twig
+	 * {{ post.field }}
+	 * {{ term.field }}
+	 * {{ user.field }}
+	 * ```
+	 *
+	 * ```php
+	 * $value = $post->field;
+	 * $value = $term->field;
+	 * $value = $user->field;
+	 * ```
+	 *
+	 * @param string $field The property/field name.
+	 * @return mixed Property value, custom field value or method call result.
 	 */
 	public function __get( $field ) {
 		if ( property_exists($this, $field) ) {
@@ -82,7 +125,6 @@ abstract class Core {
 			}
 		}
 	}
-
 
 	/**
 	 * @deprecated since 2.0.0
