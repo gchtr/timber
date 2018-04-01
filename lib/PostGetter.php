@@ -3,7 +3,7 @@
 namespace Timber;
 
 use Timber\PostCollection;
-use Timber\QueryIterator;
+use Timber\PostQueryIterator;
 
 /**
  * Class PostGetter
@@ -87,7 +87,8 @@ class PostGetter {
 	/**
 	 * @param mixed $query
 	 * @param string|array $PostClass
-	 * @return PostCollection | QueryIterator
+	 *
+	 * @return PostCollection | PostQueryIterator
 	 */
 	public static function query_posts( $query = false, $PostClass = '\Timber\Post' ) {
 		if ( $type = self::get_class_for_use_as_timber_post($query) ) {
@@ -107,7 +108,7 @@ class PostGetter {
 			return new PostCollection($query, $PostClass);
 		} else {
 			// We have a query (of sorts) to work with
-			$tqi = new QueryIterator($query, $PostClass);
+			$tqi = new PostQueryIterator($query, $PostClass);
 			return $tqi;
 		}
 	}

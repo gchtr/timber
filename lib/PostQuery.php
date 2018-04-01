@@ -23,7 +23,7 @@ class PostQuery extends PostCollection {
 	protected $userQuery;
 
 	/**
-	 * @var PostCollection|QueryIterator
+	 * @var PostCollection|PostQueryIterator
 	 */
 	protected $queryIterator;
 
@@ -117,7 +117,7 @@ class PostQuery extends PostCollection {
 	 * @return \Timber\Pagination object
 	 */
 	public function pagination( $prefs = array() ) {
-		if ( !$this->pagination && is_a($this->queryIterator, 'Timber\QueryIterator') ) {
+		if ( !$this->pagination && is_a($this->queryIterator, 'Timber\PostQueryIterator' ) ) {
 			$this->pagination = $this->queryIterator->get_pagination($prefs, $this->get_query());
 		}
 

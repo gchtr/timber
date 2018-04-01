@@ -11,9 +11,9 @@ if ( !defined('ABSPATH') ) {
 }
 
 /**
- * Class QueryIterator
+ * Class PostQueryIterator
  */
-class QueryIterator implements \Iterator, \Countable {
+class PostQueryIterator implements \Iterator, \Countable {
 
 	/**
 	 * @var \WP_Query
