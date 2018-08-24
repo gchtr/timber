@@ -537,4 +537,64 @@ class Image extends Post implements CoreInterface {
 		return $this->get_dimensions('width');
 	}
 
+	/**
+	 * Gets the orientation of an image.
+	 *
+	 * This is useful if you need a string that describes the orientation of the image, e.g. if you
+	 * need to make layout adjustments based on different image formats.
+	 *
+	 * @example
+	 * ```twig
+	 * <img src="{{ post.thumbnail.src }}" class="image image-is-{{ post.thubmnail.orientation }}">
+	 * ```
+	 *
+	 * @api
+	 * @return string The orientation of the image. Can be one of `landscape`, `portrait` or
+	 *                `square`.
+	 */
+	public function orientation() {
+		if ( $this->is_landscape() ) {
+			return 'landscape';
+		} elseif( $this->is_portrait() ) {
+			return 'portrait';
+		}
+
+		return 'square';
+	}
+
+	/**
+	 * Checks if an image has a landscape format.
+	 *
+	 * Landscape means when the width of the image is bigger than the height.
+	 *
+	 * @api
+	 * @return bool Whether the image has a landscape format.
+	 */
+	public function is_landscape() {
+		return $this->aspect() > 1;
+	}
+
+	/**
+	 * Checks if an image has a portrait format.
+	 *
+	 * Portrait means when the height of the image is bigger than the width.
+	 *
+	 * @api
+	 * @return bool Whether the image has a portrait format.
+	 */
+	public function is_portrait() {
+		return $this->aspect() < 1;
+	}
+
+	/**
+	 * Checks if an image has a square format.
+	 *
+	 * Square means when the width of the image is the same as the height.
+	 *
+	 * @api
+	 * @return bool Whether the image has a square format.
+	 */
+	public function is_square() {
+		return $this->aspect() === 0.5;
+	}
 }
