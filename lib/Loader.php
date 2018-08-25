@@ -298,11 +298,22 @@ class Loader {
 			}
 			$params['cache'] = $twig_cache_loc;
 		}
+
 		$twig = new \Twig_Environment($loader, $params);
-		if ( WP_DEBUG ) {
-			$twig->addExtension(new \Twig_Extension_Debug());
-		}
+
+		// Todo: move this over to a custom extension.
 		$twig->addExtension($this->_get_cache_extension());
+
+		/**
+		 * Filters extensions loaded into Twig.
+		 *
+		 * Allows you to add or remove Twig extensions.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param \Twig\Environment $twig The Twig environment.
+		 */
+		$twig = apply_filters( 'timber/twig/extensions', $twig );
 
 		/**
 		 * Filters …

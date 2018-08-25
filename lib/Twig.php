@@ -28,9 +28,23 @@ class Twig {
 	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
+		add_filter( 'timber/twig/extensions', array( $this, 'add_extensions' ) );
 		add_action('timber/twig/filters', array($this, 'add_timber_filters'));
 		add_action('timber/twig/functions', array($this, 'add_timber_functions'));
 		add_action('timber/twig/escapers', array($this, 'add_timber_escapers'));
+	}
+
+	/**
+	 * @param \Twig_Environment $twig
+	 */
+	public function add_extensions( $twig ) {
+		if ( WP_DEBUG ) {
+			$twig->addExtension(new \Twig_Extension_Debug());
+		}
+
+		$twig->addExtension( new \Timber\Twig\Extension\PostReset() );
+
+		return $twig;
 	}
 
 	/**
