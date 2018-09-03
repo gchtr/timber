@@ -57,43 +57,22 @@ class Twig {
 		/**
 		 * Timber object functions.
 		 */
-
-		$twig->addFunction(new Twig_Function('Post', function( $pid, $PostClass = 'Timber\Post' ) {
-					if ( is_array($pid) && !Helper::is_array_assoc($pid) ) {
-						foreach ( $pid as &$p ) {
-							$p = new $PostClass($p);
-						}
-						return $pid;
-					}
-					return new $PostClass($pid);
-				} ));
-
+		$twig->addFunction( new Twig_Function( 'Post', function( $post_id, $post_class = 'Timber\Post' ) {
+			return self::maybe_convert_array( $post_id, $post_class );
+		} ) );
 		$twig->addFunction( new Twig_Function( 'PostQuery', function( $args = false, $post_class = '\Timber\Post' ) {
 			return new PostQuery( $args, $post_class );
 		} ) );
-
-		$twig->addFunction(new Twig_Function('Image', function( $pid, $ImageClass = 'Timber\Image' ) {
-					if ( is_array($pid) && !Helper::is_array_assoc($pid) ) {
-						foreach ( $pid as &$p ) {
-							$p = new $ImageClass($p);
-						}
-						return $pid;
-					}
-					return new $ImageClass($pid);
-				} ));
-		$twig->addFunction(new Twig_Function('Term', array($this, 'handle_term_object')));
-		$twig->addFunction(new Twig_Function('User', function( $pid, $UserClass = 'Timber\User' ) {
-					if ( is_array($pid) && !Helper::is_array_assoc($pid) ) {
-						foreach ( $pid as &$p ) {
-							$p = new $UserClass($p);
-						}
-						return $pid;
-					}
-					return new $UserClass($pid);
-				} ));
 		$twig->addFunction( new Twig_Function( 'Attachment', function( $post_id, $attachment_class = 'Timber\Attachment' ) {
 			return self::maybe_convert_array( $post_id, $attachment_class );
 		} ) );
+		$twig->addFunction(new Twig_Function( 'Image', function( $post_id, $image_class = 'Timber\Image' ) {
+			return self::maybe_convert_array( $post_id, $image_class );
+		} ) );
+		$twig->addFunction(new Twig_Function( 'Term', array($this, 'handle_term_object')));
+		$twig->addFunction(new Twig_Function( 'User', function( $user_id, $user_class = 'Timber\User' ) {
+			return self::maybe_convert_array( $user_id, $user_class );
+		} ));
 
 		/**
 		 * Deprecated Timber object functions.
