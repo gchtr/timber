@@ -55,7 +55,9 @@ class PostGetter {
 	}
 
 	public static function get_posts( $query = false, $PostClass = '\Timber\Post', $return_collection = false ) {
-		$posts = self::query_posts($query, $PostClass);
+		$posts = self::query_posts( $query, array(
+			'post_class' => $PostClass,
+		) );
 
 		/**
 		 * Filters the posts returned by `Timber::get_posts()`.
@@ -89,7 +91,12 @@ class PostGetter {
 	 * @param string|array $PostClass
 	 * @return PostCollection | QueryIterator
 	 */
-	public static function query_posts( $query = false, $PostClass = '\Timber\Post' ) {
+	public static function query_posts( $query = false, $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'post_class'     => '\Timber\Post',
+			'posts_iterator' => '\Timber\PostsIterator',
+		) );
+
 		if ( $type = self::get_class_for_use_as_timber_post($query) ) {
 			$PostClass = $type;
 			if ( self::is_post_class_or_class_map($query) ) {
@@ -104,10 +111,10 @@ class PostGetter {
 
 		if ( is_array($query) && count($query) && isset($query[0]) && is_object($query[0]) ) {
 			// We have an array of post objects that already have data
-			return new PostCollection($query, $PostClass);
+			return new PostCollection( $query, $args );
 		} else {
 			// We have a query (of sorts) to work with
-			$tqi = new QueryIterator($query, $PostClass);
+			$tqi = new QueryIterator( $query, $args );
 			return $tqi;
 		}
 	}

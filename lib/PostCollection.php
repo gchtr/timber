@@ -22,17 +22,20 @@ class PostCollection extends \ArrayObject {
 	 * @param array  $posts
 	 * @param string $post_class
 	 */
-	public function __construct( $posts = array(), $post_class = '\Timber\Post' ) {
-		$returned_posts = self::init($posts, $post_class);
+	public function __construct( $posts = array(), $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'post_class'     => '\Timber\Post',
+			'posts_iterator' => '\Timber\PostsIterator',
+		) );
 
-		$posts_iterator = 'Timber\PostsIterator';
+		$returned_posts = self::init( $posts, $args['post_class'] );
 
 		/**
 		 * Filters the PostIterator class to use for a PostCollection.
 		 *
-		 * This filter is useful if you need to set special values or globals on each post. Because many plugins still
-		 * rely on The Loop and global variables, a custom PostIterator can make it much easier to integrate third party
-		 * plugins with Timber.
+		 * This filter is useful if you need to set special values or globals on each post. Because
+		 * many plugins still rely on The Loop and global variables, a custom PostIterator can make
+		 * it much easier to integrate third party plugins with Timber.
 		 *
 		 * @since 1.5.0
 		 * @example
@@ -58,11 +61,17 @@ class PostCollection extends \ArrayObject {
 		 * }
 		 * ```
 		 *
-		 * @param string $posts_iterator The iterator class to use to loop over posts. Default `Timber\PostsIterator`.
+		 * @param string $posts_iterator The iterator class to use to loop over posts.
+		 *                               Default `Timber\PostsIterator`.
 		 * @param array  $returned_posts An array of posts.
 		 * @param string $post_class     The post class to use to extend posts with.
 		 */
-		$posts_iterator = apply_filters('timber/class/posts_iterator', $posts_iterator, $returned_posts, $post_class);
+		$posts_iterator = apply_filters(
+			'timber/class/posts_iterator',
+			$args['posts_iterator'],
+			$returned_posts,
+			$args['post_class']
+		);
 
 		parent::__construct($returned_posts, 0, $posts_iterator);
 	}

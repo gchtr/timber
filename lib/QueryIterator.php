@@ -19,13 +19,17 @@ class QueryIterator implements \Iterator, \Countable {
 	 * @var \WP_Query
 	 */
 	private $_query = null;
-	private $_posts_class = 'Timber\Post';
+	private $post_class = 'Timber\Post';
 
-	public function __construct( $query = false, $posts_class = 'Timber\Post' ) {
+	public function __construct( $query = false, $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'post_class' => '\Timber\Post',
+		) );
+
 		add_action('pre_get_posts', array($this, 'fix_number_posts_wp_quirk'));
 		add_action('pre_get_posts', array($this, 'fix_cat_wp_quirk'));
-		if ( $posts_class ) {
-			$this->_posts_class = $posts_class;
+		if ( $args['post_class'] ) {
+			$this->post_class = $args['post_class'];
 		}
 
 		if ( is_a($query, 'WP_Query') ) {
@@ -70,7 +74,9 @@ class QueryIterator implements \Iterator, \Countable {
 
 	public function get_posts( $return_collection = false ) {
 		if ( isset($this->_query->posts) ) {
-			$posts = new PostCollection($this->_query->posts, $this->_posts_class);
+			$posts = new PostCollection( $this->_query->posts, array(
+				'post_class' => $this->post_class,
+			) );
 			return ($return_collection) ? $posts : $posts->get_posts();
 		}
 	}
@@ -117,7 +123,7 @@ class QueryIterator implements \Iterator, \Countable {
 		$this->_query->the_post();
 
 		// Sets up the global post, but also return the post, for use in Twig template
-		$posts_class = $this->_posts_class;
+		$posts_class = $this->post_class;
 		return new $posts_class($post);
 	}
 

@@ -69,13 +69,32 @@ class PostQuery extends PostCollection {
 	 * @param string            $post_class Optional. Class to use to wrap the post objects in the
 	 *                                      collection. Default `Timber\Post`.
 	 */
-	public function __construct( $query = false, $post_class = '\Timber\Post' ) {
+	public function __construct( $query = false, $args = array() ) {
+		/**
+		 * For backwards compatibility
+		 *
+		 * @todo Remove in 3.x
+		 */
+		if ( ! is_array( $args ) ) {
+			Helper::warn( 'The second parameter of this function now takes an argument array '
+			. 'instead of the name of a post class.' );
+
+			$args = array(
+				'post_class' => $args,
+			);
+		}
+
+		$args = wp_parse_args( $args, array(
+			'post_class'     => '\Timber\Post',
+			'posts_iterator' => '\Timber\PostIterator',
+		) );
+
 		$this->userQuery = $query;
-		$this->queryIterator = PostGetter::query_posts($query, $post_class);
+		$this->queryIterator = PostGetter::query_posts( $query, $args );
 
 		$posts = $this->queryIterator->get_posts();
 
-		parent::__construct($posts, $post_class);
+		parent::__construct( $posts, $args );
 	}
 
 	/**
